@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passcodeHash String
+  role         String   @default("MENTEE")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  bookings  Booking[]
+  reports   Report[]
+  auditLogs AuditLog[]
+}
+
+model Mentor {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  name          String
+  headline      String
+  initials      String
+  bio           String
+  domains       String
+  tags          String
+  stages        String
+  locations     String
+  languages     String
+  meetings      String
+  pricing       String
+  trustScore    Int
+  reviewQuality Int
+  responseRate  Int
+  verified      String
+  payment       String
+  meeting       String
+  availability  String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  bookings Booking[]
+}
+
+model Booking {
+  id                  String   @id @default(cuid())
+  menteeId           String
+  mentorId           String
+  problemSummary     String
+  payment            String
+  meetingInstructions String
+  state              String   @default("REQUESTED")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  mentee User   @relation(fields: [menteeId], references: [id])
+  mentor Mentor  @relation(fields: [mentorId], references: [id])
+
+  @@index([menteeId])
+  @@index([mentorId])
+}
+
+model Report {
+  id              String   @id @default(cuid())
+  reporterId      String
+  targetMentorId  String?
+  category        String
+  risk            String   @default("LOW")
+  description     String
+  status          String   @default("OPEN")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  reporter User @relation(fields: [reporterId], references: [id])
+
+  @@index([status])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  message   String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
