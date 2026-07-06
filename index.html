@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OpenMargam Advisory Network</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Poppins:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div id="auth-gate" class="auth-gate" aria-labelledby="auth-title">
+      <section class="auth-thesis" aria-hidden="true">
+        <div class="thesis-inner">
+          <span class="brand-mark large" aria-hidden="true">OM</span>
+          <p class="eyebrow">Open mentorship network</p>
+          <h2>Match the problem to the person, not the profile to the keyword.</h2>
+          <p class="thesis-body">
+            OpenMargam is a problem-first advisory network. Describe what you are deciding, and the
+            matching engine ranks mentors by expertise, lived context, trust, and meeting
+            feasibility. No commission, no payment custody, no growth theater.
+          </p>
+          <ul class="thesis-principles">
+            <li><strong>Problem-first.</strong> Intake drives the match.</li>
+            <li><strong>User-owned services.</strong> Bring your own payment, calendar, and meeting tools.</li>
+            <li><strong>Trust, visible.</strong> Verification, response rate, and review quality up front.</li>
+            <li><strong>Safety, default.</strong> Public-first meetings, private documents, audited moderation.</li>
+          </ul>
+        </div>
+      </section>
+
+      <div class="auth-card">
+        <div class="auth-tabs" role="tablist" aria-label="Account access">
+          <button type="button" class="auth-tab active" data-auth-tab="signup" role="tab" aria-selected="true">Create account</button>
+          <button type="button" class="auth-tab" data-auth-tab="login" role="tab" aria-selected="false">Sign in</button>
+        </div>
+
+        <form id="signup-form" class="auth-form" aria-label="Create account" novalidate>
+          <div class="step-rail" aria-hidden="true">
+            <span class="step-dot active" data-step="1"></span>
+            <span class="step-dot" data-step="2"></span>
+          </div>
+
+          <fieldset class="step active" data-step="1">
+            <legend class="step-legend">Step 1 — Who you are</legend>
+            <label class="field">
+              <span>Full name</span>
+              <input id="signup-name" type="text" placeholder="Your name" required autocomplete="name" />
+              <em class="field-error" data-error-for="signup-name"></em>
+            </label>
+            <label class="field">
+              <span>Email</span>
+              <input id="signup-email" type="email" placeholder="you@example.com" required autocomplete="email" />
+              <em class="field-error" data-error-for="signup-email"></em>
+            </label>
+            <button class="button primary" type="button" id="signup-next">Continue</button>
+            <p class="auth-note">Demo only — accounts live in your browser. No server, no email sent.</p>
+          </fieldset>
+
+          <fieldset class="step" data-step="2" disabled>
+            <legend class="step-legend">Step 2 — How you join</legend>
+            <label class="field">
+              <span>I want to join as <em class="hint">(you can change later — the same person can be both mentor and mentee)</em></span>
+              <select id="signup-role" required>
+                <option value="mentee">Mentee — find mentors and get advice</option>
+                <option value="mentor">Mentor — offer guidance and build reputation</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Create a passcode</span>
+              <div class="input-with-action">
+                <input id="signup-passcode" type="password" placeholder="At least 6 characters" required autocomplete="new-password" />
+                <button type="button" class="toggle-visibility" data-target="signup-passcode" aria-label="Show passcode">Show</button>
+              </div>
+              <em class="field-error" data-error-for="signup-passcode"></em>
+              <meter class="passcode-strength" min="0" max="4" value="0" low="1" high="3" optimum="4" aria-label="Passcode strength"></meter>
+            </label>
+            <label class="field">
+              <span>Confirm passcode</span>
+              <input id="signup-passcode-confirm" type="password" placeholder="Re-enter passcode" required autocomplete="new-password" />
+              <em class="field-error" data-error-for="signup-passcode-confirm"></em>
+            </label>
+            <div class="form-actions">
+              <button class="button ghost" type="button" id="signup-back">Back</button>
+              <button class="button primary" type="submit">Create account</button>
+            </div>
+          </fieldset>
+        </form>
+
+        <form id="login-form" class="auth-form hidden" aria-label="Sign in" novalidate>
+          <label class="field">
+            <span>Email</span>
+            <input id="login-email" type="email" placeholder="you@example.com" required autocomplete="email" />
+            <em class="field-error" data-error-for="login-email"></em>
+          </label>
+          <label class="field">
+            <span>Passcode</span>
+            <div class="input-with-action">
+              <input id="login-passcode" type="password" placeholder="Your passcode" required autocomplete="current-password" />
+              <button type="button" class="toggle-visibility" data-target="login-passcode" aria-label="Show passcode">Show</button>
+            </div>
+            <em class="field-error" data-error-for="login-passcode"></em>
+          </label>
+          <button class="button primary" type="submit">Sign in</button>
+          <p class="auth-note" id="login-error"></p>
+        </form>
+
+        <ul class="auth-principles">
+          <li>No commission</li>
+          <li>Manual links first</li>
+          <li>Bring your own services</li>
+          <li>Safety default</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="app-shell" id="app-shell" hidden>
+      <aside class="sidebar" aria-label="Primary navigation">
+        <a class="brand" href="#discover" aria-label="OpenMargam home">
+          <span class="brand-mark" aria-hidden="true">OM</span>
+          <span>
+            <strong>OpenMargam</strong>
+            <small>Advisory network</small>
+          </span>
+        </a>
+
+        <div class="role-switch" aria-label="Audience mode">
+          <button type="button" data-role="mentee">Mentee</button>
+          <button type="button" data-role="mentor">Mentor</button>
+          <button type="button" data-role="admin">Admin</button>
+        </div>
+
+        <nav class="nav-list" aria-label="Pages">
+          <p class="nav-group-label">Discover</p>
+          <a href="#onboarding" data-route="onboarding" data-roles="mentee mentor">Profile setup</a>
+          <a href="#discover" data-route="discover" data-roles="mentee">Find mentors</a>
+          <a href="#mentors" data-route="mentors" data-roles="mentee">Explore mentors</a>
+
+          <p class="nav-group-label">Mentor</p>
+          <a href="#mentor-studio" data-route="mentor-studio" data-roles="mentor">Mentor dashboard</a>
+          <a href="#mentor-requests" data-route="mentor-requests" data-roles="mentor">Requests</a>
+
+          <p class="nav-group-label">Sessions</p>
+          <a href="#bookings" data-route="bookings" data-roles="mentee mentor">My bookings</a>
+
+          <p class="nav-group-label">Trust</p>
+          <a href="#safety" data-route="safety" data-roles="mentee mentor admin">Safety center</a>
+          <a href="#admin" data-route="admin" data-roles="admin">Admin panel</a>
+        </nav>
+
+        <p class="sidebar-note">No commission. Payments go directly between mentor and mentee.</p>
+      </aside>
+      <main class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Problem-first mentorship</p>
+            <h1 id="page-title">Find the right person for the problem</h1>
+            <p id="page-subtitle" class="page-subtitle">Capture context once, then rank mentors by fit, trust, and meeting feasibility.</p>
+          </div>
+          <div class="topbar-actions">
+            <span id="user-chip" class="status-pill muted"></span>
+            <span id="role-chip" class="status-pill muted">Mentee view</span>
+            <button class="icon-button" id="reset-demo" title="Reset demo state" aria-label="Reset demo state">↻</button>
+            <button class="button secondary" id="logout-button" type="button">Sign out</button>
+            <a class="button secondary" href="./plan.md">Plan</a>
+          </div>
+        </header>
+
+        <section id="route-onboarding" class="route" aria-labelledby="onboarding-title">
+          <div class="onboarding-hero">
+            <div>
+              <p class="eyebrow">Guided setup</p>
+              <h2 id="onboarding-title">Tune matching before the first search</h2>
+              <p>OpenMargam uses lightweight preferences to avoid generic mentor lists. These defaults prefill discovery and keep privacy choices explicit.</p>
+            </div>
+            <div class="hero-metrics">
+              <span><strong id="preference-completion">0%</strong> complete</span>
+              <span><strong>0</strong> paid APIs</span>
+              <span><strong>BYO</strong> services</span>
+            </div>
+          </div>
+
+          <div class="onboarding-layout">
+            <section class="panel glass-panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Preferences</p>
+                  <h2>Your mentorship context</h2>
+                </div>
+                <span id="onboarding-status" class="status-pill muted">Not saved</span>
+              </div>
+              <form id="onboarding-form" class="form-grid">
+                <label class="field span-2">
+                  <span>Primary goal</span>
+                  <input id="pref-goal" type="text" placeholder="Build a robotics career, switch into AI, validate SaaS pricing..." />
+                </label>
+                <label class="field">
+                  <span>Domain</span>
+                  <select id="pref-domain"></select>
+                </label>
+                <label class="field">
+                  <span>Stage</span>
+                  <select id="pref-stage"></select>
+                </label>
+                <label class="field">
+                  <span>Location context</span>
+                  <select id="pref-location"></select>
+                </label>
+                <label class="field">
+                  <span>Language</span>
+                  <select id="pref-language"></select>
+                </label>
+                <label class="field">
+                  <span>Meeting comfort</span>
+                  <select id="pref-meeting"></select>
+                </label>
+                <label class="field">
+                  <span>Budget comfort</span>
+                  <select id="pref-budget"></select>
+                </label>
+                <label class="field span-2">
+                  <span>Safety preference</span>
+                  <select id="pref-safety">
+                    <option value="public-first">Public place or video first</option>
+                    <option value="remote-only">Remote only</option>
+                    <option value="verified-only">Verified mentors only</option>
+                  </select>
+                </label>
+                <div class="form-actions span-2">
+                  <button class="button primary" type="submit">Save preferences</button>
+                  <button class="button ghost" type="button" id="apply-preferences">Apply to discovery</button>
+                </div>
+              </form>
+            </section>
+
+            <section class="preference-preview">
+              <article class="preview-card elevated">
+                <p class="eyebrow">Matching profile</p>
+                <h3 id="preview-goal">No goal captured yet</h3>
+                <div id="preference-tags" class="tag-row"></div>
+              </article>
+              <article class="preview-card dark-card">
+                <p class="eyebrow">Privacy default</p>
+                <h3>Private first</h3>
+                <p>Resume notes and sensitive context stay private. Mentors see only the matching reasons you choose to share.</p>
+              </article>
+            </section>
+          </div>
+        </section>
+
+        <section id="route-discover" class="route active" aria-labelledby="discover-title">
+          <section class="product-hero">
+            <div>
+              <p class="eyebrow">OpenMargam Scout</p>
+              <h2>Matches that explain themselves.</h2>
+              <p>Describe the situation. The app scores mentors across problem fit, lived context, stage, location, language, trust, availability, meeting type, and budget.</p>
+            </div>
+            <div class="hero-panel">
+              <span>Right person</span>
+              <span>Right problem</span>
+              <span>High trust</span>
+            </div>
+          </section>
+          <div class="split-layout">
+            <section class="panel intake-panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Mentee intake</p>
+                  <h2 id="discover-title">Describe the decision you need help with</h2>
+                </div>
+                <span class="status-pill">Structured v1</span>
+              </div>
+
+              <form id="problem-form" class="form-grid">
+                <label class="field span-2">
+                  <span>Problem statement</span>
+                  <textarea id="problem-statement" rows="6" required></textarea>
+                </label>
+
+                <label class="field">
+                  <span>Domain</span>
+                  <select id="domain"></select>
+                </label>
+
+                <label class="field">
+                  <span>Stage</span>
+                  <select id="stage"></select>
+                </label>
+
+                <label class="field">
+                  <span>Location context</span>
+                  <select id="location"></select>
+                </label>
+
+                <label class="field">
+                  <span>Language</span>
+                  <select id="language"></select>
+                </label>
+
+                <label class="field">
+                  <span>Meeting type</span>
+                  <select id="meeting"></select>
+                </label>
+
+                <label class="field">
+                  <span>Budget</span>
+                  <select id="budget"></select>
+                </label>
+
+                <label class="field span-2">
+                  <span>Profile links or resume notes</span>
+                  <input id="profile-notes" type="text" />
+                </label>
+
+                <div class="form-actions span-2">
+                  <button class="button primary" type="submit">Run matching</button>
+                  <button class="button ghost" type="button" id="use-sample">Use sample</button>
+                </div>
+              </form>
+            </section>
+
+            <section class="panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Recommendation queue</p>
+                  <h2>Explainable matches</h2>
+                </div>
+                <span id="match-count" class="status-pill muted">0 matches</span>
+              </div>
+              <div id="match-results" class="match-list empty-state">
+                <p>Submit a problem to rank mentors by expertise, lived context, trust, availability, language, location, meeting type, and budget fit.</p>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section id="route-mentors" class="route" aria-labelledby="mentors-title">
+          <section class="mentor-hero">
+            <div>
+              <p class="eyebrow">Mentor graph</p>
+              <h2 id="mentors-title">A directory that still feels curated</h2>
+              <p>Filter by domain and scan trust, availability, language, meeting comfort, and service ownership without opening endless profile pages.</p>
+            </div>
+            <div class="mentor-stats" id="mentor-stats"></div>
+          </section>
+
+          <section class="panel directory-panel">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">Profile trust signals</p>
+                <h2>Available mentors</h2>
+              </div>
+              <div class="toolbar">
+                <select id="mentor-filter" aria-label="Filter mentors by domain"></select>
+              </div>
+            </div>
+            <div id="mentor-grid" class="mentor-grid"></div>
+          </section>
+        </section>
+
+        <section id="route-mentor-studio" class="route" aria-labelledby="mentor-studio-title">
+          <section class="mentor-workspace-hero">
+            <div>
+              <p class="eyebrow">Mentor workspace</p>
+              <h2 id="mentor-studio-title">Set your boundaries before people book you</h2>
+              <p>This is the mentor-side product: profile readiness, expertise, service links, availability, and trust signals. It is not the mentee discovery directory.</p>
+            </div>
+            <div class="mentor-studio-metrics" id="mentor-studio-metrics"></div>
+          </section>
+
+          <div class="mentor-studio-layout">
+            <section class="panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Profile readiness</p>
+                  <h2>Your mentor setup</h2>
+                </div>
+                <span class="status-pill">Public preview ready</span>
+              </div>
+              <div id="mentor-setup-list" class="setup-list"></div>
+            </section>
+
+            <section class="panel dark-ops-panel">
+              <p class="eyebrow">Service ownership</p>
+              <h2>Bring your own services</h2>
+              <div class="service-stack">
+                <article>
+                  <strong>Payment</strong>
+                  <span>Stripe Payment Link or free community hours</span>
+                </article>
+                <article>
+                  <strong>Meeting</strong>
+                  <span>Google Meet, public venue, or decide after booking</span>
+                </article>
+                <article>
+                  <strong>Availability</strong>
+                  <span>Manual blocks first, calendar integration later</span>
+                </article>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section id="route-mentor-requests" class="route" aria-labelledby="mentor-requests-title">
+          <section class="mentor-workspace-hero requests-hero">
+            <div>
+              <p class="eyebrow">Incoming requests</p>
+              <h2 id="mentor-requests-title">Decide with context, not pressure</h2>
+              <p>Mentors can accept, reject, or ask for clarification. Paid sessions stay direct between participants.</p>
+            </div>
+            <div class="hero-panel">
+              <span>Clarify first</span>
+              <span>No custody</span>
+              <span>Report pressure</span>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">Mentor queue</p>
+                <h2>Requests for your time</h2>
+              </div>
+              <span id="mentor-request-count" class="status-pill muted">0 open</span>
+            </div>
+            <div id="mentor-request-list" class="booking-list"></div>
+          </section>
+        </section>
+
+        <section id="route-bookings" class="route" aria-labelledby="bookings-title">
+          <section class="panel">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">State machine</p>
+                <h2 id="bookings-title">Booking requests</h2>
+              </div>
+              <span id="booking-count" class="status-pill muted">0 active</span>
+            </div>
+            <div id="booking-list" class="booking-list"></div>
+          </section>
+        </section>
+
+        <section id="route-safety" class="route" aria-labelledby="safety-title">
+          <div class="split-layout compact">
+            <section class="panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Trust and privacy</p>
+                  <h2 id="safety-title">Safety center</h2>
+                </div>
+              </div>
+              <div class="safety-grid">
+                <article>
+                  <h3>Payment custody</h3>
+                  <p>Payments stay outside the platform. Mentors publish instructions or links, and the app stores no processor secrets or bank credentials.</p>
+                </article>
+                <article>
+                  <h3>High-risk advice</h3>
+                  <p>Legal, medical, immigration, tax, financial, and crisis topics are flagged with professional-advice disclaimers.</p>
+                </article>
+                <article>
+                  <h3>In-person meetings</h3>
+                  <p>Broad locations are shown first. Exact locations require confirmation, and public venues are recommended.</p>
+                </article>
+                <article>
+                  <h3>Private documents</h3>
+                  <p>Resume notes are private by default. Mentors see derived matching signals unless a mentee explicitly shares raw material.</p>
+                </article>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Report flow</p>
+                  <h2>Submit a report</h2>
+                </div>
+              </div>
+              <form id="report-form" class="form-grid">
+                <label class="field span-2">
+                  <span>User</span>
+                  <select id="report-user"></select>
+                </label>
+                <label class="field">
+                  <span>Category</span>
+                  <select id="report-category"></select>
+                </label>
+                <label class="field">
+                  <span>Risk</span>
+                  <select id="report-risk">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                  </select>
+                </label>
+                <label class="field span-2">
+                  <span>Description</span>
+                  <textarea id="report-description" rows="4" required></textarea>
+                </label>
+                <div class="form-actions span-2">
+                  <button class="button primary" type="submit">Send report</button>
+                </div>
+              </form>
+            </section>
+          </div>
+        </section>
+
+        <section id="route-admin" class="route" aria-labelledby="admin-title">
+          <section class="admin-hero">
+            <div>
+              <p class="eyebrow">Trust operations</p>
+              <h2 id="admin-title">Moderation cockpit</h2>
+              <p>See risk, reports, suspensions, and audit events in one calm review surface.</p>
+            </div>
+            <div class="admin-metrics" id="admin-metrics"></div>
+          </section>
+          <div class="admin-layout">
+            <section class="panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Moderation queue</p>
+                  <h2>Reports</h2>
+                </div>
+                <span id="report-count" class="status-pill muted">0 open</span>
+              </div>
+              <div id="report-list" class="report-list"></div>
+            </section>
+
+            <section class="panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Audit trail</p>
+                  <h2>Admin actions</h2>
+                </div>
+              </div>
+              <div id="audit-list" class="audit-list"></div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,47 @@
+import { PrismaClient } from "@prisma/client";
+import { SEED_MENTORS } from "../lib/seed-mentors";
+
+const prisma = new PrismaClient();
+
+async function main() {
+  console.log("Seeding mentors...");
+  for (const m of SEED_MENTORS) {
+    await prisma.mentor.upsert({
+      where: { id: m.id },
+      update: {},
+      create: {
+        id: m.id,
+        userId: m.id,
+        name: m.name,
+        headline: m.headline,
+        initials: m.initials,
+        bio: m.bio,
+        domains: JSON.stringify(m.domains),
+        tags: JSON.stringify(m.tags),
+        stages: JSON.stringify(m.stages),
+        locations: JSON.stringify(m.locations),
+        languages: JSON.stringify(m.languages),
+        meetings: JSON.stringify(m.meetings),
+        pricing: m.pricing,
+        trustScore: m.trustScore,
+        reviewQuality: m.reviewQuality,
+        responseRate: m.responseRate,
+        verified: JSON.stringify(m.verified),
+        payment: m.payment,
+        meeting: m.meeting,
+        availability: m.availability,
+      },
+    });
+    console.log(`  ✓ ${m.name}`);
+  }
+  console.log("Seed complete.");
+}
+
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

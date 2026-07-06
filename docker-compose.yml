@@ -1,0 +1,9 @@
+services:
+  web:
+    image: python:3.12-alpine
+    working_dir: /app
+    command: python -m http.server 4173
+    ports:
+      - "4173:4173"
+    volumes:
+      - ./:/app:ro
