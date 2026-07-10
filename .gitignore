@@ -21,10 +21,6 @@ web/prisma/migrations/dev/
 web/.env
 web/.env.local
 
-# Production
-dist/
-build/
-
 # Misc
 .DS_Store
 *.pem

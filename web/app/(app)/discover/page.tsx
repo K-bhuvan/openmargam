@@ -15,11 +15,13 @@ export default function DiscoverPage() {
   const [matches, setMatches] = useState<MentorMatch[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [bookingStatus, setBookingStatus] = useState<Record<string, string>>({});
 
   async function runMatch(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setBookingStatus({});
     const res = await fetch("/api/match", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -31,12 +33,29 @@ export default function DiscoverPage() {
     setMatches(data.matches);
   }
 
+  async function requestBooking(mentorId: string) {
+    setBookingStatus((current) => ({ ...current, [mentorId]: "Requesting..." }));
+    const res = await fetch("/api/bookings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mentorId, problemSummary: statement }),
+    });
+    const data = await res.json();
+    setBookingStatus((current) => ({
+      ...current,
+      [mentorId]: res.ok ? "Requested" : data.error || "Request failed.",
+    }));
+  }
+
   return (
     <div className="max-w-6xl mx-auto">
       <div className="mb-8">
-        <p className="eyebrow mb-2">OpenMargam Scout</p>
-        <h2 className="text-2xl mb-2">Matches that explain themselves.</h2>
-        <p className="text-[var(--muted)]">Describe the situation. The engine scores mentors across problem fit, lived context, stage, location, language, trust, availability, meeting type, and budget.</p>
+        <p className="eyebrow mb-2">Problem-first matching</p>
+        <h2 className="text-2xl mb-2">Describe the problem. Get ranked matches.</h2>
+        <p className="text-[var(--muted)]">
+          The matching engine scores mentors across expertise, lived context, stage, location, language, trust, availability, meeting type, and budget fit.
+          Want to browse instead? <a href="/mentors" className="text-[var(--primary)] underline">Browse the directory →</a>
+        </p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -125,6 +144,19 @@ export default function DiscoverPage() {
                       <span key={d} className="text-[0.72rem] px-2 py-0.5 rounded-full bg-[var(--surface-soft)] text-[var(--muted)] font-poppins">{d}</span>
                     ))}
                     <span className="text-[0.72rem] px-2 py-0.5 rounded-full bg-[var(--surface-soft)] text-[var(--muted)] font-poppins">{m.mentor.pricing}</span>
+                  </div>
+                  <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-[var(--line)] pt-3">
+                    <button
+                      type="button"
+                      className="btn-secondary px-3 py-2 text-xs"
+                      disabled={bookingStatus[m.mentor.id] === "Requesting..." || bookingStatus[m.mentor.id] === "Requested"}
+                      onClick={() => requestBooking(m.mentor.id)}
+                    >
+                      Request session
+                    </button>
+                    {bookingStatus[m.mentor.id] && (
+                      <span className="text-xs text-[var(--muted)]">{bookingStatus[m.mentor.id]}</span>
+                    )}
                   </div>
                 </article>
               ))}

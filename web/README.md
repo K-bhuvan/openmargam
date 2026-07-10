@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OpenMargam Web
 
-## Getting Started
+This is the active Next.js app for OpenMargam. It uses:
 
-First, run the development server:
+- Next.js App Router
+- Prisma
+- Postgres
+- JWT-backed HTTP-only session cookies
 
-```bash
+## Local Development
+
+From this directory:
+
+```sh
+cp .env.example .env
+npm install
+npm run db:migrate
+npm run db:seed
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+For the full Docker workflow, run `./start.sh` from the repository root. The root compose file starts Postgres, applies Prisma migrations with `prisma migrate deploy`, seeds mentors, and starts the standalone Next.js server.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Environment
 
-## Learn More
+Required:
 
-To learn more about Next.js, take a look at the following resources:
+- `DATABASE_URL`: Postgres connection string.
+- `JWT_SECRET`: 32+ character secret for signing session JWTs. Production startup fails if this is missing.
+- `SESSION_COOKIE_NAME`: optional cookie name override.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Checks
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```sh
+npm run typecheck
+npm run lint
+npm run build
+npm audit --omit=dev
+```

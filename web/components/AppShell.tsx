@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface NavItem {
   href: string;
@@ -12,31 +12,47 @@ interface NavItem {
 }
 
 const NAV: NavItem[] = [
-  { href: "/onboarding", label: "Profile setup", roles: ["MENTEE", "MENTOR"], group: "Discover" },
+  { href: "/welcome", label: "How it works", roles: ["MENTEE", "MENTOR"], group: "Start" },
   { href: "/discover", label: "Find mentors", roles: ["MENTEE"], group: "Discover" },
-  { href: "/mentors", label: "Explore mentors", roles: ["MENTEE"], group: "Discover" },
-  { href: "/mentor-studio", label: "Mentor dashboard", roles: ["MENTOR"], group: "Mentor" },
-  { href: "/mentor-requests", label: "Requests", roles: ["MENTOR"], group: "Mentor" },
+  { href: "/mentors", label: "Browse mentors", roles: ["MENTEE"], group: "Discover" },
   { href: "/bookings", label: "My bookings", roles: ["MENTEE", "MENTOR"], group: "Sessions" },
-  { href: "/safety", label: "Safety center", roles: ["MENTEE", "MENTOR", "ADMIN"], group: "Trust" },
-  { href: "/admin", label: "Admin panel", roles: ["ADMIN"], group: "Trust" },
+  { href: "/safety", label: "Safety center", roles: ["MENTEE", "MENTOR"], group: "Trust" },
 ];
 
 const ROLE_LABELS: Record<string, string> = {
   MENTEE: "Mentee",
   MENTOR: "Mentor",
-  ADMIN: "Admin",
 };
 
-export function AppShell({ user, children }: { user: { id: string; name: string; email: string; role: string }; children: React.ReactNode }) {
+interface AppShellProps {
+  user: { id: string; name: string; email: string; role: string; onboarded: boolean };
+  children: React.ReactNode;
+}
+
+export function AppShell({ user, children }: AppShellProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [role, setRole] = useState(user.role);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const initials = user.name.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase();
 
   const visibleNav = NAV.filter((n) => n.roles.includes(role));
   const groups = Array.from(new Set(visibleNav.map((n) => n.group)));
+
+  useEffect(() => {
+    function onClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false);
+    }
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, []);
+
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [pathname]);
 
   async function logout() {
     await fetch("/api/auth/logout", { method: "POST" });
@@ -45,41 +61,50 @@ export function AppShell({ user, children }: { user: { id: string; name: string;
   }
 
   return (
-    <div className="grid md:grid-cols-[268px_1fr] min-h-screen">
-      <aside className="hidden md:flex flex-col gap-5 h-screen sticky top-0 p-5 bg-[#141413] text-[#f8fafc] overflow-y-auto">
-        <Link href="/discover" className="flex items-center gap-3">
-          <span className="w-11 h-11 grid place-items-center rounded-lg border border-white/20 bg-gradient-to-br from-[#f4d77a] to-[#d9a64e] text-[#141413] text-[0.8rem] font-bold">
-            OM
-          </span>
-          <span>
-            <strong className="block font-poppins">OpenMargam</strong>
-            <small className="text-[0.72rem] text-[#b8c2cf]">Advisory network</small>
-          </span>
-        </Link>
+    <div className="min-h-screen">
+      {/* Drawer overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 z-40"
+          onClick={() => setSidebarOpen(false)}
+          aria-hidden="true"
+        />
+      )}
 
-        <div className="grid grid-cols-3 gap-1 p-1 rounded-full border border-white/12 bg-white/8">
-          {(["MENTEE", "MENTOR", "ADMIN"] as const).map((r) => (
-            <button
-              key={r}
-              onClick={() => setRole(r)}
-              className={`rounded-full py-2 text-[0.76rem] font-bold font-poppins transition-colors ${
-                role === r ? "bg-[#fffaf1] text-[#141413]" : "text-[#cfc7ba]"
-              }`}
-            >
-              {ROLE_LABELS[r]}
-            </button>
-          ))}
+      {/* Slide-in sidebar */}
+      <aside
+        className={`fixed top-0 left-0 z-50 h-screen w-[240px] flex flex-col gap-5 p-5 bg-[#141413] text-[#f8fafc] overflow-y-auto transition-transform duration-200 ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="flex items-center justify-between">
+          <Link href={user.onboarded ? "/discover" : "/welcome"} className="flex items-center gap-3">
+            <span className="w-10 h-10 grid place-items-center rounded-lg border border-white/20 bg-gradient-to-br from-[#f4d77a] to-[#d9a64e] text-[#141413] text-[0.78rem] font-bold">
+              OM
+            </span>
+            <span>
+              <strong className="block font-poppins text-sm">OpenMargam</strong>
+              <small className="text-[0.7rem] text-[#b8c2cf]">Advisory network</small>
+            </span>
+          </Link>
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="text-white/60 hover:text-white p-1"
+            aria-label="Close menu"
+          >
+            ✕
+          </button>
         </div>
 
         <nav className="grid gap-0.5">
           {groups.map((group) => (
             <div key={group}>
-              <p className="my-2 mx-1 text-[0.66rem] font-bold uppercase tracking-wider text-white/40 font-poppins">{group}</p>
+              <p className="my-2 mx-1 text-[0.64rem] font-bold uppercase tracking-wider text-white/40 font-poppins">{group}</p>
               {visibleNav.filter((n) => n.group === group).map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`block rounded-[10px] px-3 py-2 text-[0.88rem] transition-all ${
+                  className={`block rounded-[10px] px-3 py-2 text-[0.86rem] transition-all ${
                     pathname === item.href
                       ? "bg-white/12 text-white border border-white/12"
                       : "text-[#ded8ce] hover:bg-white/8 hover:text-white"
@@ -92,23 +117,71 @@ export function AppShell({ user, children }: { user: { id: string; name: string;
           ))}
         </nav>
 
-        <p className="mt-auto p-3 border border-white/8 rounded-xl bg-white/4 text-[#cfc7ba] text-[0.78rem] leading-relaxed">
+        <p className="mt-auto p-3 border border-white/8 rounded-xl bg-white/4 text-[#cfc7ba] text-[0.76rem] leading-relaxed">
           No commission. Payments go directly between mentor and mentee.
         </p>
       </aside>
 
+      {/* Main content */}
       <main className="flex flex-col min-h-screen">
-        <header className="flex items-center justify-between gap-4 px-6 md:px-8 py-4 border-b border-[var(--line)] bg-[var(--surface)]">
-          <div>
-            <p className="eyebrow">Problem-first mentorship</p>
-            <h1 className="text-xl md:text-2xl">OpenMargam</h1>
-          </div>
+        <header className="flex items-center justify-between gap-4 px-6 md:px-8 py-3 border-b border-[var(--line)] bg-[var(--surface)]">
           <div className="flex items-center gap-3">
-            <span className="text-sm text-[var(--muted)] font-poppins">{initials} · {user.email}</span>
-            <span className="px-3 py-1 rounded-full bg-[var(--surface-soft)] text-[var(--muted)] text-sm font-poppins">
-              {ROLE_LABELS[role]} view
-            </span>
-            <button onClick={logout} className="btn-secondary">Sign out</button>
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="w-9 h-9 grid place-items-center rounded-md border border-[var(--line)] hover:border-[var(--primary)] transition-colors"
+              aria-label="Open menu"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
+            </button>
+            <h1 className="text-base md:text-lg font-poppins">{pageTitle(pathname)}</h1>
+          </div>
+
+          <div className="relative flex items-center gap-3" ref={menuRef}>
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="w-9 h-9 grid place-items-center rounded-full border border-[var(--line)] hover:border-[var(--primary)] transition-colors"
+              aria-label="Account menu"
+            >
+              <span className="text-sm font-bold font-poppins">{initials}</span>
+            </button>
+
+            {menuOpen && (
+              <div className="absolute right-0 top-12 w-64 bg-[var(--surface)] border border-[var(--line)] rounded-xl shadow-lg overflow-hidden z-50">
+                <div className="px-4 py-3 border-b border-[var(--line)]">
+                  <p className="font-poppins font-semibold text-sm">{user.name}</p>
+                  <p className="text-xs text-[var(--muted)]">{user.email}</p>
+                </div>
+                <div className="px-4 py-3 border-b border-[var(--line)]">
+                  <p className="eyebrow mb-2">Viewing as</p>
+                  <div className="grid grid-cols-2 gap-1 p-1 rounded-lg bg-[var(--surface-soft)]">
+                    {(["MENTEE", "MENTOR"] as const).map((r) => (
+                      <button
+                        key={r}
+                        onClick={() => setRole(r)}
+                        className={`rounded-md py-1.5 text-[0.72rem] font-bold font-poppins transition-colors ${
+                          role === r ? "bg-[var(--ink)] text-[#faf9f5]" : "text-[var(--muted)]"
+                        }`}
+                      >
+                        {ROLE_LABELS[r]}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <Link href="/onboarding" onClick={() => setMenuOpen(false)} className="block px-4 py-2.5 text-sm hover:bg-[var(--surface-soft)] transition-colors">
+                  Profile setup
+                </Link>
+                <Link href="/safety" onClick={() => setMenuOpen(false)} className="block px-4 py-2.5 text-sm hover:bg-[var(--surface-soft)] transition-colors">
+                  Safety center
+                </Link>
+                <button onClick={logout} className="block w-full text-left px-4 py-2.5 text-sm text-[var(--danger)] hover:bg-[var(--surface-soft)] transition-colors">
+                  Sign out
+                </button>
+              </div>
+            )}
           </div>
         </header>
 
@@ -116,4 +189,16 @@ export function AppShell({ user, children }: { user: { id: string; name: string;
       </main>
     </div>
   );
+}
+
+function pageTitle(pathname: string): string {
+  const map: Record<string, string> = {
+    "/welcome": "How it works",
+    "/discover": "Find mentors",
+    "/onboarding": "Profile setup",
+    "/mentors": "Browse mentors",
+    "/bookings": "My bookings",
+    "/safety": "Safety center",
+  };
+  return map[pathname] || "OpenMargam";
 }

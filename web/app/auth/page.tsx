@@ -71,7 +71,7 @@ export default function AuthPage() {
       setErrors({ email: data.error || "Signup failed." });
       return;
     }
-    router.push("/discover");
+    router.push("/");
     router.refresh();
   }
 
@@ -99,7 +99,7 @@ export default function AuthPage() {
       setLoginError(data.error || "Login failed.");
       return;
     }
-    router.push("/discover");
+    router.push("/");
     router.refresh();
   }
 
@@ -122,12 +122,11 @@ export default function AuthPage() {
           </div>
           <p className="eyebrow text-[#f4d77a]/80 mb-3">Open mentorship network</p>
           <h2 className="text-[2.1rem] mb-5 text-[#faf9f5]">
-            Match the problem to the person, not the profile to the keyword.
+            The right mentor for your decision.
           </h2>
           <p className="text-[#d8d4cb] text-[1.02rem] mb-7 max-w-[460px]">
-            OpenMargam is a problem-first advisory network. Describe what you are deciding, and the
-            matching engine ranks mentors by expertise, lived context, trust, and meeting feasibility.
-            No commission, no payment custody, no growth theater.
+            Describe what you are deciding. Get matched with mentors who have lived through it —
+            or become one yourself. No commission, no payment custody.
           </p>
           <ul className="space-y-3 list-none p-0">
             {[
