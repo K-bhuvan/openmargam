@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getCurrentUser, unauthorizedResponse } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
-import { SEED_MENTORS } from "@/lib/seed-mentors";
 
 const CreateBookingSchema = z.object({
   mentorId: z.string(),
@@ -15,6 +14,7 @@ export async function GET() {
 
   const bookings = await prisma.booking.findMany({
     where: { menteeId: user.id },
+    include: { mentor: { select: { name: true, headline: true } } },
     orderBy: { createdAt: "desc" },
   });
   return NextResponse.json({ bookings });
@@ -33,7 +33,10 @@ export async function POST(request: Request) {
   }
 
   const { mentorId, problemSummary } = parsed.data;
-  const mentor = SEED_MENTORS.find((m) => m.id === mentorId);
+  const mentor = await prisma.mentor.findUnique({
+    where: { id: mentorId },
+    select: { id: true, name: true, payment: true, meeting: true },
+  });
   if (!mentor) return NextResponse.json({ error: "Mentor not found." }, { status: 404 });
 
   const booking = await prisma.booking.create({

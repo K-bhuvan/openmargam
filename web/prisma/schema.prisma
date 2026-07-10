@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -12,13 +12,23 @@ model User {
   name         String
   email        String   @unique
   passcodeHash String
-  role         String   @default("MENTEE")
+  role         Role     @default(MENTEE)
+  preferences  Json     @default("{}")
+  onboarded    Boolean  @default(false)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  bookings  Booking[]
+  bookings  Booking[] @relation("MenteeBookings")
   reports   Report[]
   auditLogs AuditLog[]
+
+  @@index([email])
+}
+
+enum Role {
+  MENTEE
+  MENTOR
+  ADMIN
 }
 
 model Mentor {
@@ -28,58 +38,85 @@ model Mentor {
   headline      String
   initials      String
   bio           String
-  domains       String
-  tags          String
-  stages        String
-  locations     String
-  languages     String
-  meetings      String
+  domains       String[]
+  tags          String[]
+  stages        String[]
+  locations     String[]
+  languages     String[]
+  meetings      String[]
   pricing       String
   trustScore    Int
   reviewQuality Int
   responseRate  Int
-  verified      String
+  verified      String[]
   payment       String
   meeting       String
   availability  String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  bookings Booking[]
+  bookings Booking[] @relation("MentorBookings")
+
+  @@index([domains])
 }
 
 model Booking {
-  id                  String   @id @default(cuid())
-  menteeId           String
-  mentorId           String
-  problemSummary     String
-  payment            String
+  id                   String       @id @default(cuid())
+  menteeId            String
+  mentorId            String
+  problemSummary      String
+  payment             String
   meetingInstructions String
-  state              String   @default("REQUESTED")
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  state               BookingState @default(REQUESTED)
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
 
-  mentee User   @relation(fields: [menteeId], references: [id])
-  mentor Mentor  @relation(fields: [mentorId], references: [id])
+  mentee User   @relation("MenteeBookings", fields: [menteeId], references: [id], onDelete: Cascade)
+  mentor Mentor @relation("MentorBookings", fields: [mentorId], references: [id], onDelete: Cascade)
 
   @@index([menteeId])
   @@index([mentorId])
+  @@index([state])
+}
+
+enum BookingState {
+  REQUESTED
+  CLARIFICATION_REQUESTED
+  ACCEPTED
+  PAYMENT_PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  REJECTED
 }
 
 model Report {
-  id              String   @id @default(cuid())
-  reporterId      String
-  targetMentorId  String?
-  category        String
-  risk            String   @default("LOW")
-  description     String
-  status          String   @default("OPEN")
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id             String     @id @default(cuid())
+  reporterId     String
+  targetMentorId String?
+  category       String
+  risk           RiskLevel  @default(LOW)
+  description    String
+  status         ReportStatus @default(OPEN)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
 
-  reporter User @relation(fields: [reporterId], references: [id])
+  reporter User @relation(fields: [reporterId], references: [id], onDelete: Cascade)
 
   @@index([status])
+  @@index([risk])
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum ReportStatus {
+  OPEN
+  RESOLVED
+  SUSPENDED
 }
 
 model AuditLog {
@@ -88,7 +125,8 @@ model AuditLog {
   message   String
   createdAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@index([createdAt])
 }

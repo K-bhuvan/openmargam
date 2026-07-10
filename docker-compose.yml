@@ -1,9 +1,65 @@
 services:
-  web:
-    image: python:3.12-alpine
-    working_dir: /app
-    command: python -m http.server 4173
+  postgres:
+    image: postgres:16-alpine
+    container_name: openmargam-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: openmargam
     ports:
-      - "4173:4173"
+      - "5432:5432"
     volumes:
-      - ./:/app:ro
+      - openmargam_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d openmargam"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  migrate:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+      target: migrate-tools
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/openmargam?schema=public"
+    command: ["npx", "prisma", "migrate", "deploy"]
+    restart: "no"
+
+  seed:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+      target: migrate-tools
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/openmargam?schema=public"
+    command: ["npx", "tsx", "prisma/seed.ts"]
+    restart: "no"
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+      target: runner
+    container_name: openmargam-web
+    restart: unless-stopped
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/openmargam?schema=public"
+      JWT_SECRET: "${JWT_SECRET:?Set JWT_SECRET in .env before starting OpenMargam}"
+      SESSION_COOKIE_NAME: "openmargam_session"
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+
+volumes:
+  openmargam_pgdata:
