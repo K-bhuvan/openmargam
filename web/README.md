@@ -34,6 +34,7 @@ Required:
 ## Checks
 
 ```sh
+npm test
 npm run typecheck
 npm run lint
 npm run build

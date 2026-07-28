@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getCurrentUser, unauthorizedResponse } from "@/lib/session";
+import { prisma } from "@/lib/prisma";
 import { rankMentors, type Problem } from "@/lib/matching";
-import { SEED_MENTORS } from "@/lib/seed-mentors";
+import { PUBLIC_MENTOR_SELECT } from "@/lib/public-mentor";
 
 const MatchSchema = z.object({
   statement: z.string().min(10, "Describe the problem in at least 10 characters."),
@@ -28,6 +29,10 @@ export async function POST(request: Request) {
   }
 
   const problem: Problem = parsed.data;
-  const matches = rankMentors(problem, SEED_MENTORS, []);
+  const mentors = await prisma.mentor.findMany({
+    select: PUBLIC_MENTOR_SELECT,
+    orderBy: { createdAt: "asc" },
+  });
+  const matches = rankMentors(problem, mentors, []);
   return NextResponse.json({ matches });
 }

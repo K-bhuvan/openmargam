@@ -7,7 +7,6 @@ node_modules/
 web/.next/
 web/out/
 web/build/
-web/next-env.d.ts
 
 # Prisma
 web/prisma/dev.db

@@ -61,8 +61,6 @@ export interface Mentor {
   reviewQuality: number;
   responseRate: number;
   verified: string[];
-  payment: string;
-  meeting: string;
   availability: string;
   bio: string;
 }
