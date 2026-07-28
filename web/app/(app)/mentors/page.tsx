@@ -1,14 +1,30 @@
 "use client";
 
-import { useState } from "react";
-import { SEED_MENTORS } from "@/lib/seed-mentors";
-import { TAXONOMY } from "@/lib/matching";
+import { useEffect, useState } from "react";
+import { TAXONOMY, type Mentor } from "@/lib/matching";
 
 export default function MentorsPage() {
+  const [mentors, setMentors] = useState<Mentor[]>([]);
   const [filter, setFilter] = useState("All domains");
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const filtered = SEED_MENTORS.filter((m) => {
+  useEffect(() => {
+    async function loadMentors() {
+      const res = await fetch("/api/mentors");
+      const data = await res.json();
+      setLoading(false);
+      if (!res.ok) {
+        setError(data.error || "Could not load mentors.");
+        return;
+      }
+      setMentors(data.mentors);
+    }
+    void loadMentors();
+  }, []);
+
+  const filtered = mentors.filter((m) => {
     const matchesDomain = filter === "All domains" || m.domains.includes(filter);
     const q = search.toLowerCase();
     const matchesSearch = !q || m.name.toLowerCase().includes(q) || m.headline.toLowerCase().includes(q) || m.tags.some((t) => t.includes(q));
@@ -37,6 +53,15 @@ export default function MentorsPage() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-4">
+        {loading && (
+          <div
+            aria-busy="true"
+            aria-label="Loading mentors"
+            className="md:col-span-2 bg-[var(--surface)] rounded-xl border border-[var(--line)] p-12 text-center text-[var(--muted)]"
+          >
+            Loading mentors...
+          </div>
+        )}
         {filtered.map((m) => (
           <article key={m.id} className="bg-[var(--surface)] rounded-xl border border-[var(--line)] p-5">
             <div className="flex items-start justify-between mb-3">
@@ -72,7 +97,9 @@ export default function MentorsPage() {
         ))}
       </div>
 
-      {filtered.length === 0 && (
+      {error && <p className="text-center text-[var(--danger)] py-12">{error}</p>}
+
+      {!loading && !error && filtered.length === 0 && (
         <p className="text-center text-[var(--muted)] py-12">No mentors match your search.</p>
       )}
     </div>

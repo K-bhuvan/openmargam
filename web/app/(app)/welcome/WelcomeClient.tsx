@@ -16,7 +16,9 @@ const PRINCIPLES = [
   { title: "Safety as default", body: "Public-first meetings, private documents, verified profiles, audited moderation." },
 ];
 
-export function WelcomeClient({ onboarded }: { onboarded: boolean }) {
+export function WelcomeClient({ onboarded, role }: { onboarded: boolean; role: string }) {
+  const isMentor = role === "MENTOR";
+
   return (
     <div className="max-w-4xl mx-auto">
       <section className="text-center py-8 md:py-12">
@@ -31,10 +33,12 @@ export function WelcomeClient({ onboarded }: { onboarded: boolean }) {
           {!onboarded ? (
             <>
               <Link href="/onboarding" className="btn-primary">Set up your profile</Link>
-              <Link href="/discover" className="btn-secondary">Browse mentors first</Link>
+              {!isMentor && <Link href="/discover" className="btn-secondary">Browse mentors first</Link>}
             </>
           ) : (
-            <Link href="/discover" className="btn-primary">Find mentors</Link>
+            <Link href={isMentor ? "/bookings" : "/discover"} className="btn-primary">
+              {isMentor ? "View session requests" : "Find mentors"}
+            </Link>
           )}
         </div>
       </section>
@@ -73,7 +77,9 @@ export function WelcomeClient({ onboarded }: { onboarded: boolean }) {
         {!onboarded ? (
           <Link href="/onboarding" className="btn-primary">Set up your profile</Link>
         ) : (
-          <Link href="/discover" className="btn-primary">Find mentors</Link>
+          <Link href={isMentor ? "/bookings" : "/discover"} className="btn-primary">
+            {isMentor ? "View session requests" : "Find mentors"}
+          </Link>
         )}
       </section>
     </div>

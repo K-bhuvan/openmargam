@@ -1,3 +1,4 @@
+import json
 import re
 import unittest
 from pathlib import Path
@@ -92,6 +93,42 @@ class StaticAppTests(unittest.TestCase):
         self.assertIn('src="./src/app.js"', html)
         self.assertTrue((ROOT / "styles.css").exists())
         self.assertTrue((ROOT / "src/app.js").exists())
+
+    def test_brand_assets_exist(self):
+        html = self.read("index.html")
+        static_assets = [
+            "web/public/favicon.svg",
+            "web/public/favicon-32x32.png",
+            "web/public/favicon-16x16.png",
+            "web/app/favicon.ico",
+            "web/public/apple-touch-icon.png",
+            "web/public/logo.svg",
+        ]
+        for asset in static_assets:
+            self.assertIn(f'./{asset}', html)
+            self.assertTrue((ROOT / asset).exists(), f"Missing referenced asset: {asset}")
+
+        layout = self.read("web/app/layout.tsx")
+        self.assertIn('manifest: "/site.webmanifest"', layout)
+        for asset in [
+            "favicon.svg",
+            "favicon-32x32.png",
+            "favicon-16x16.png",
+            "apple-touch-icon.png",
+        ]:
+            self.assertIn(f'"/{asset}"', layout)
+            self.assertTrue((ROOT / "web/public" / asset).exists(), f"Missing Next.js icon: {asset}")
+        self.assertIn('"/favicon.ico"', layout)
+        self.assertTrue((ROOT / "web/app/favicon.ico").exists())
+
+        for component in ["web/app/auth/page.tsx", "web/components/AppShell.tsx"]:
+            self.assertIn('src="/logo.svg"', self.read(component))
+        self.assertTrue((ROOT / "web/public/logo.svg").exists())
+
+        manifest = json.loads(self.read("web/public/site.webmanifest"))
+        for icon in manifest["icons"]:
+            asset = ROOT / "web/public" / icon["src"].lstrip("/")
+            self.assertTrue(asset.exists(), f"Missing manifest icon: {asset.name}")
 
     def test_lived_experience_does_not_double_count_location(self):
         """livedExperience should be driven by tag/text overlap, not location (which has its own dimension)."""

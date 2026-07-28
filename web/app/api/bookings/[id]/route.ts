@@ -3,7 +3,11 @@ import { z } from "zod";
 import { getCurrentUser, unauthorizedResponse } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { canTransition } from "@/lib/matching";
-import { canUpdateBooking } from "@/lib/bookings";
+import {
+  allowedBookingTransitions,
+  canTransitionBooking,
+  canUpdateBooking,
+} from "@/lib/bookings";
 
 const TransitionSchema = z.object({
   state: z.string(),
@@ -32,19 +36,52 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   }
 
   const currentState = booking.state;
-  if (!canTransition(currentState, parsed.data.state)) {
-    return NextResponse.json({ error: `Cannot transition from ${booking.state} to ${parsed.data.state}.` }, { status: 400 });
+  const nextState = parsed.data.state;
+  if (!canTransition(currentState, nextState)) {
+    return NextResponse.json({ error: `Cannot transition from ${booking.state} to ${nextState}.` }, { status: 400 });
+  }
+  if (!canTransitionBooking(user, booking, nextState)) {
+    return NextResponse.json(
+      { error: "Your account cannot perform that booking action." },
+      { status: 403 },
+    );
   }
 
-  const updated = await prisma.booking.update({
-    where: { id },
-    data: { state: parsed.data.state },
-    include: { mentor: { select: { name: true, headline: true } } },
+  const updated = await prisma.$transaction(async (tx) => {
+    const result = await tx.booking.updateMany({
+      where: { id, state: currentState },
+      data: { state: nextState },
+    });
+    if (result.count === 0) return null;
+
+    const transitioned = await tx.booking.findUniqueOrThrow({
+      where: { id },
+      include: {
+        mentor: { select: { name: true, headline: true, userId: true } },
+        mentee: { select: { name: true } },
+      },
+    });
+    await tx.auditLog.create({
+      data: { userId: user.id, message: `Booking ${booking.id} moved to ${nextState}` },
+    });
+    return transitioned;
   });
 
-  await prisma.auditLog.create({
-    data: { userId: user.id, message: `Booking ${booking.id} moved to ${parsed.data.state}` },
-  });
+  if (!updated) {
+    return NextResponse.json(
+      { error: "This booking changed before your action completed. Refresh and try again." },
+      { status: 409 },
+    );
+  }
 
-  return NextResponse.json({ booking: updated });
+  return NextResponse.json({
+    booking: {
+      ...updated,
+      mentor: {
+        name: updated.mentor.name,
+        headline: updated.mentor.headline,
+      },
+      availableTransitions: allowedBookingTransitions(user, updated),
+    },
+  });
 }

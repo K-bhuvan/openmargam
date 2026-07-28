@@ -1,6 +1,11 @@
 import type { Mentor } from "./matching";
 
-export const SEED_MENTORS: Mentor[] = [
+interface SeedMentor extends Mentor {
+  payment: string;
+  meeting: string;
+}
+
+export const SEED_MENTORS: SeedMentor[] = [
   {
     id: "mira-patel",
     name: "Mira Patel",

@@ -125,7 +125,8 @@ a {
   width: 56px;
   height: 56px;
   border-radius: 14px;
-  font-size: 1rem;
+  display: block;
+  object-fit: cover;
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: linear-gradient(145deg, #f4d77a, #d9a64e);
   color: #141413;
@@ -483,16 +484,13 @@ a {
 }
 
 .brand-mark {
-  display: grid;
+  display: block;
   width: 44px;
   height: 44px;
-  place-items: center;
+  flex: 0 0 44px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
-  background: linear-gradient(145deg, #f4d77a, #d9a64e);
-  color: #17202a;
-  font-size: 0.8rem;
-  font-weight: 800;
+  object-fit: cover;
 }
 
 .brand strong,

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 type Tab = "signup" | "login";
 type SignupStep = 1 | 2;
@@ -117,9 +118,14 @@ export default function AuthPage() {
       {/* Brand thesis panel */}
       <section className="hidden md:flex items-center px-[8%] py-14 relative bg-[#141413] text-[#faf9f5]">
         <div className="max-w-[520px]">
-          <div className="w-14 h-14 rounded-[14px] grid place-items-center bg-gradient-to-br from-[#f4d77a] to-[#d9a64e] text-[#141413] font-bold text-sm border border-white/20 mb-6">
-            OM
-          </div>
+          <Image
+            src="/logo.svg"
+            width={56}
+            height={56}
+            alt="OpenMargam"
+            className="rounded-[14px] border border-white/20 mb-6"
+            priority
+          />
           <p className="eyebrow text-[#f4d77a]/80 mb-3">Open mentorship network</p>
           <h2 className="text-[2.1rem] mb-5 text-[#faf9f5]">
             The right mentor for your decision.

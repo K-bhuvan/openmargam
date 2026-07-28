@@ -4,5 +4,6 @@ import { getCurrentUser } from "@/lib/session";
 export default async function HomePage() {
   const user = await getCurrentUser();
   if (!user) redirect("/auth");
-  redirect(user.onboarded ? "/discover" : "/welcome");
+  if (!user.onboarded) redirect("/welcome");
+  redirect(user.role === "MENTOR" || user.role === "ADMIN" ? "/bookings" : "/discover");
 }

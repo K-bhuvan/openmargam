@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 
@@ -12,16 +13,17 @@ interface NavItem {
 }
 
 const NAV: NavItem[] = [
-  { href: "/welcome", label: "How it works", roles: ["MENTEE", "MENTOR"], group: "Start" },
+  { href: "/welcome", label: "How it works", roles: ["MENTEE", "MENTOR", "ADMIN"], group: "Start" },
   { href: "/discover", label: "Find mentors", roles: ["MENTEE"], group: "Discover" },
-  { href: "/mentors", label: "Browse mentors", roles: ["MENTEE"], group: "Discover" },
-  { href: "/bookings", label: "My bookings", roles: ["MENTEE", "MENTOR"], group: "Sessions" },
-  { href: "/safety", label: "Safety center", roles: ["MENTEE", "MENTOR"], group: "Trust" },
+  { href: "/mentors", label: "Browse mentors", roles: ["MENTEE", "ADMIN"], group: "Discover" },
+  { href: "/bookings", label: "Bookings", roles: ["MENTEE", "MENTOR", "ADMIN"], group: "Sessions" },
+  { href: "/safety", label: "Safety center", roles: ["MENTEE", "MENTOR", "ADMIN"], group: "Trust" },
 ];
 
 const ROLE_LABELS: Record<string, string> = {
   MENTEE: "Mentee",
   MENTOR: "Mentor",
+  ADMIN: "Administrator",
 };
 
 interface AppShellProps {
@@ -32,14 +34,13 @@ interface AppShellProps {
 export function AppShell({ user, children }: AppShellProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const [role, setRole] = useState(user.role);
   const [menuOpen, setMenuOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   const initials = user.name.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase();
 
-  const visibleNav = NAV.filter((n) => n.roles.includes(role));
+  const visibleNav = NAV.filter((n) => n.roles.includes(user.role));
   const groups = Array.from(new Set(visibleNav.map((n) => n.group)));
 
   useEffect(() => {
@@ -78,10 +79,25 @@ export function AppShell({ user, children }: AppShellProps) {
         }`}
       >
         <div className="flex items-center justify-between">
-          <Link href={user.onboarded ? "/discover" : "/welcome"} className="flex items-center gap-3">
-            <span className="w-10 h-10 grid place-items-center rounded-lg border border-white/20 bg-gradient-to-br from-[#f4d77a] to-[#d9a64e] text-[#141413] text-[0.78rem] font-bold">
-              OM
-            </span>
+          <Link
+            href={
+              !user.onboarded
+                ? "/welcome"
+                : user.role === "MENTOR" || user.role === "ADMIN"
+                  ? "/bookings"
+                  : "/discover"
+            }
+            className="flex items-center gap-3"
+          >
+            <Image
+              src="/logo.svg"
+              width={40}
+              height={40}
+              alt=""
+              aria-hidden="true"
+              className="rounded-lg border border-white/20"
+              priority
+            />
             <span>
               <strong className="block font-poppins text-sm">OpenMargam</strong>
               <small className="text-[0.7rem] text-[#b8c2cf]">Advisory network</small>
@@ -156,20 +172,10 @@ export function AppShell({ user, children }: AppShellProps) {
                   <p className="text-xs text-[var(--muted)]">{user.email}</p>
                 </div>
                 <div className="px-4 py-3 border-b border-[var(--line)]">
-                  <p className="eyebrow mb-2">Viewing as</p>
-                  <div className="grid grid-cols-2 gap-1 p-1 rounded-lg bg-[var(--surface-soft)]">
-                    {(["MENTEE", "MENTOR"] as const).map((r) => (
-                      <button
-                        key={r}
-                        onClick={() => setRole(r)}
-                        className={`rounded-md py-1.5 text-[0.72rem] font-bold font-poppins transition-colors ${
-                          role === r ? "bg-[var(--ink)] text-[#faf9f5]" : "text-[var(--muted)]"
-                        }`}
-                      >
-                        {ROLE_LABELS[r]}
-                      </button>
-                    ))}
-                  </div>
+                  <p className="eyebrow mb-1">Account type</p>
+                  <p className="text-sm font-poppins font-semibold">
+                    {ROLE_LABELS[user.role] ?? user.role}
+                  </p>
                 </div>
                 <Link href="/onboarding" onClick={() => setMenuOpen(false)} className="block px-4 py-2.5 text-sm hover:bg-[var(--surface-soft)] transition-colors">
                   Profile setup
@@ -197,7 +203,7 @@ function pageTitle(pathname: string): string {
     "/discover": "Find mentors",
     "/onboarding": "Profile setup",
     "/mentors": "Browse mentors",
-    "/bookings": "My bookings",
+    "/bookings": "Bookings",
     "/safety": "Safety center",
   };
   return map[pathname] || "OpenMargam";
