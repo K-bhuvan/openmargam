@@ -15,7 +15,7 @@
 
 <p align="center">
   <a href="#run-locally-with-docker">Run locally</a> ·
-  <a href="#roadmap">Roadmap</a>
+  <a href="#contributing">Contribute</a>
 </p>
 
 ---
@@ -60,18 +60,11 @@ right person can prevent years of unnecessary confusion or regret.
 
 ## What OpenMargam is building
 
-Most mentorship directories begin with profiles: search a title, scan a list,
-and hope the right person appears.
+OpenMargam is exploring a simple idea: make it easier for people facing
+important decisions to connect with people whose experience may help.
 
-OpenMargam begins with the problem.
-
-1. Describe the decision or constraint you are facing.
-2. Match with mentors using expertise, lived context, career stage, language,
-   location, availability, meeting format, trust, and budget fit.
-3. Understand why each mentor was recommended.
-4. Request a conversation without surrendering payment or service ownership to
-   the platform.
-5. Make the decision yourself, with better context than you had before.
+The project is intentionally early. We are building in public, learning as we
+go, and will shape the details as the product and community evolve.
 
 ## Project status
 
@@ -112,8 +105,8 @@ for reference and regression coverage.
 
 ## A project intended to stay open
 
-OpenMargam will be developed in public, and its source and roadmap are intended
-to remain publicly accessible.
+OpenMargam will be developed in public, and its source and direction are
+intended to remain publicly accessible.
 
 I am building and open-sourcing the foundation, and I intend to host a public
 instance for as close to the minimum sustainable cost as possible. The goal is
@@ -227,44 +220,3 @@ issues should follow [`SECURITY.md`](SECURITY.md), not a public issue.
 ## License
 
 OpenMargam is licensed under the [GNU AGPL v3.0](LICENSE).
-
-## Roadmap
-
-The detailed product plan lives in [`plan.md`](plan.md). The summary below
-shows what works, what is in progress, and where community contributions can
-help next.
-
-| Phase | Status | Scope |
-| --- | --- | --- |
-| **0. Public foundation** | Mostly complete | Next.js, TypeScript, PostgreSQL, Prisma migration, Docker Compose, documentation, automated checks, contribution and security policies. Next: add product screenshots. |
-| **1. Profiles** | In progress | Auth, mentee preferences, and self-service mentor profiles work. Next: richer mentee profiles, multiple expertise entries, profile links, services, and secure resume upload. |
-| **2. Matching v1** | Working baseline | Structured intake, deterministic ranking, filters, explanations, and scenario tests work. Next: persist problem requests, configurable weights, and feedback signals. |
-| **3. Booking v1** | Working baseline | Requests, mentor queues, role-specific transitions, and external payment/meeting instructions work. Next: bookable availability, clarification notes, confirmation email, rescheduling, and cancellation policies. |
-| **4. Trust and safety** | Early implementation | Reports, risk levels, audit entries, and safety guidance exist. Next: two-sided reviews, blocking, admin moderation, trust rules, and suspicious-link warnings. |
-| **5. Badges and community** | Not started | Earned badge rules, public badge pages, follow/save mentor, and small communities. |
-| **6. Advanced matching** | Not started | Semantic search, local embeddings, resume extraction, optional AI adapters, and feedback-based ranking. |
-| **7. Optional integrations** | Not started | Google/Outlook Calendar, Meet/Zoom, reminders, SMS, and user-provided AI keys. |
-
-### Near-term checkpoints
-
-1. **Prepare the public repository**
-   - verify GitHub Actions on the first pull request;
-   - add screenshots and a contributor walkthrough;
-   - document production deployment, backups, rate limiting, and logs.
-2. **Complete the two-sided mentorship flow**
-   - expand mentor profiles with services and verification requests;
-   - persist richer mentee profiles and problem requests;
-   - add availability slots, clarification notes, and email notifications;
-   - add individual mentor pages and focused dashboards.
-3. **Build the trust layer**
-   - add reviews and ratings;
-   - add block-user controls;
-   - add an audited admin report queue;
-   - derive trust signals from real activity.
-4. **Grow only after the foundation is trustworthy**
-   - badges and small communities;
-   - improved and optional semantic matching;
-   - calendar, meeting, notification, and AI-provider integrations.
-
-If this intention resonates with you, the roadmap is an invitation: use the
-project, question it, improve it, and help shape where it goes next.
