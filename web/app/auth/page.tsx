@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 
 type Tab = "signup" | "login";
 type SignupStep = 1 | 2;
@@ -138,8 +139,8 @@ export default function AuthPage() {
             {[
               ["Problem-first.", "Intake drives the match."],
               ["User-owned services.", "Bring your own payment, calendar, and meeting tools."],
-              ["Trust, visible.", "Verification, response rate, and review quality up front."],
-              ["Safety, default.", "Public-first meetings, private documents, audited moderation."],
+              ["Trust, earned.", "Trust signals will come from real, explainable activity."],
+              ["Safety, explicit.", "Public-meeting guidance and clear reporting boundaries."],
             ].map(([bold, rest]) => (
               <li key={bold} className="border-l-2 border-[#d97757] pl-3.5 text-[0.94rem] text-[#e8e6dc]">
                 <strong className="font-poppins font-bold text-[#faf9f5]">{bold}</strong> {rest}
@@ -152,6 +153,9 @@ export default function AuthPage() {
       {/* Form panel */}
       <div className="flex items-center justify-center p-8 md:p-12 bg-[var(--surface)]">
         <div className="w-full max-w-[440px]">
+          <Link href="/" className="mb-6 inline-flex items-center gap-2 text-sm font-semibold font-poppins text-[var(--muted)] hover:text-[var(--ink)]">
+            <span aria-hidden="true">←</span> OpenMargam home
+          </Link>
           <div className="grid grid-cols-2 gap-1 p-1 rounded-full bg-[var(--surface-soft)] border border-[var(--line)] mb-6">
             <button
               onClick={() => switchTab("signup")}
@@ -212,7 +216,7 @@ export default function AuthPage() {
                     Continue
                   </button>
                   <p className="text-[0.78rem] text-[var(--muted)] text-center mt-1">
-                    Demo only — accounts are secure but this is a prototype.
+                    Early preview — do not enter sensitive personal information.
                   </p>
                 </div>
               )}

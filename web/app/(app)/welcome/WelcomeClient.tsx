@@ -4,16 +4,16 @@ import Link from "next/link";
 
 const STEPS = [
   { n: "01", title: "Describe your problem", body: "Tell us what you are deciding — career switch, startup pricing, grad school, a hiring path. The more specific, the better the match.", icon: "✎" },
-  { n: "02", title: "Get ranked, explainable matches", body: "The matching engine scores mentors across expertise, lived context, stage, location, language, trust, and budget fit. Every score comes with reasons.", icon: "⌖" },
+  { n: "02", title: "Get ranked, explainable matches", body: "The matching engine scores mentors across expertise, lived context, stage, location, language, meeting type, and budget fit. Every score comes with reasons.", icon: "⌖" },
   { n: "03", title: "Book without custody", body: "Request a session. Mentors accept, clarify, or reject. Payments stay between you and the mentor — the platform never holds money.", icon: "↗" },
-  { n: "04", title: "Meet and follow up", body: "Use Google Meet, Zoom, or a public venue. Share notes after. Report anything that feels off — moderation is audited.", icon: "✓" },
+  { n: "04", title: "Meet and follow up", body: "Use Google Meet, Zoom, or a public venue. Share notes after. Reports create an audit trail for future moderation tools.", icon: "✓" },
 ];
 
 const PRINCIPLES = [
   { title: "No commission", body: "Mentors keep what they earn. We never take a cut." },
   { title: "Bring your own services", body: "Stripe, PayPal, Wise, UPI — mentors choose their own payment and meeting tools." },
   { title: "Problem-first, not profile-first", body: "Matching starts from what you are deciding, not from browsing names." },
-  { title: "Safety as default", body: "Public-first meetings, private documents, verified profiles, audited moderation." },
+  { title: "Safety made explicit", body: "Public-place guidance, clear cautions, and auditable reports." },
 ];
 
 export function WelcomeClient({ onboarded, role }: { onboarded: boolean; role: string }) {

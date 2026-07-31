@@ -53,7 +53,7 @@ export default function DiscoverPage() {
         <p className="eyebrow mb-2">Problem-first matching</p>
         <h2 className="text-2xl mb-2">Describe the problem. Get ranked matches.</h2>
         <p className="text-[var(--muted)]">
-          The matching engine scores mentors across expertise, lived context, stage, location, language, trust, availability, meeting type, and budget fit.
+          The matching engine scores mentors across expertise, lived context, stage, location, language, meeting type, and budget fit.
           Want to browse instead? <a href="/mentors" className="text-[var(--primary)] underline">Browse the directory →</a>
         </p>
       </div>
@@ -118,7 +118,7 @@ export default function DiscoverPage() {
             <span className="text-sm text-[var(--muted)]">{matches.length} matches</span>
           </div>
           {matches.length === 0 ? (
-            <p className="text-[var(--muted)] text-sm">Submit a problem to rank mentors by expertise, lived context, trust, availability, language, location, meeting type, and budget fit.</p>
+            <p className="text-[var(--muted)] text-sm">Submit a problem to rank mentors by expertise, lived context, stage, language, location, meeting type, and budget fit.</p>
           ) : (
             <div className="grid gap-4">
               {matches.map((m) => (

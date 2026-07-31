@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { rankMentors, type Problem } from "../lib/matching";
+import { rankMentors, scoreMentor, type Problem } from "../lib/matching";
 import { PUBLIC_MENTOR_SELECT } from "../lib/public-mentor";
 import { SEED_MENTORS } from "../lib/seed-mentors";
 
@@ -56,6 +56,16 @@ test("blocked mentors are excluded before results are limited", () => {
 
   assert.equal(matches.some((match) => match.mentor.id === "grace-chen"), false);
   assert.ok(matches.length <= 5);
+});
+
+test("seed profiles do not contribute unearned trust signals", () => {
+  for (const mentor of SEED_MENTORS) {
+    const match = scoreMentor(baseProblem, mentor);
+    assert.equal(match.dimensions.trust, 0);
+    assert.equal(match.dimensions.review, 0);
+    assert.equal(match.dimensions.availability, 0);
+    assert.deepEqual(mentor.verified, []);
+  }
 });
 
 test("public mentor projection excludes private instructions and internal ownership", () => {
