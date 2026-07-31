@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#faf9f5" />
+    <meta name="referrer" content="no-referrer" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'"
+    />
+    <meta
+      name="description"
+      content="OpenMargam is an experimental, open-source exploration of problem-first mentorship."
+    />
+    <title>OpenMargam — Experimental open-source showcase</title>
+    <link rel="icon" href="logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav shell" aria-label="Primary navigation">
+        <a class="brand" href="#top" aria-label="OpenMargam home">
+          <img src="logo.svg" width="44" height="44" alt="" />
+          <span><strong>OpenMargam</strong><small>Experimental open-source showcase</small></span>
+        </a>
+        <div class="nav-links">
+          <a href="#demo">Try the demo</a>
+          <a href="#roadmap">Roadmap</a>
+          <a class="button button-small button-outline" href="https://github.com/K-bhuvan/openmargam">View source</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero section-rule">
+        <div class="shell hero-grid">
+          <div>
+            <p class="eyebrow">Public experiment · Synthetic data only</p>
+            <h1>Find clarity before making a life-shaping decision.</h1>
+            <p class="lede">
+              OpenMargam explores a problem-first way to connect important questions with people
+              whose experience may help illuminate the tradeoffs.
+            </p>
+            <div class="actions">
+              <a class="button" href="#demo">Try the browser-only demo</a>
+              <a class="button button-outline" href="https://github.com/K-bhuvan/openmargam#readme">Read the project story</a>
+            </div>
+            <p class="fine-print">
+              This is not an operational mentorship service. It has no accounts, bookings,
+              payments, analytics, or data collection.
+            </p>
+          </div>
+
+          <aside class="decision-note" aria-label="Example decision">
+            <p class="eyebrow">A decision, not a search query</p>
+            <blockquote>
+              “I want to move into AI and robotics, but I have a secure offer, limited savings,
+              and no clear route from here to there.”
+            </blockquote>
+            <div class="note-footer">
+              <strong>Context changes the match</strong>
+              <span>Experience · constraints · location · stage</span>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section section-rule" aria-labelledby="how-title">
+        <div class="shell">
+          <p class="eyebrow">The idea</p>
+          <h2 id="how-title">Better questions before bigger commitments.</h2>
+          <ol class="steps">
+            <li><span>01</span><h3>Describe the decision</h3><p>Start with the real choice and the constraints around it.</p></li>
+            <li><span>02</span><h3>Understand the match</h3><p>See which experience is relevant and why it was selected.</p></li>
+            <li><span>03</span><h3>Keep ownership</h3><p>Use another person’s context without handing them the decision.</p></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section demo-section section-rule" id="demo" aria-labelledby="demo-title">
+        <div class="shell demo-grid">
+          <div class="demo-intro">
+            <p class="eyebrow">Browser-only prototype</p>
+            <h2 id="demo-title">See problem-first matching in action.</h2>
+            <p>
+              Enter a fictional or general scenario. Matching happens entirely on this page. Your
+              text is never transmitted or saved and disappears when you refresh.
+            </p>
+            <div class="privacy-box">
+              <strong>Privacy boundary</strong>
+              <p>No data submissions, third-party requests, cookies, accounts, storage, analytics, or external APIs.</p>
+            </div>
+          </div>
+
+          <div class="demo-workspace">
+            <form id="match-form">
+              <label for="decision">What are you trying to decide?</label>
+              <textarea
+                id="decision"
+                name="decision"
+                rows="5"
+                maxlength="600"
+                required
+                placeholder="Example: I have a stable software job but want to move into robotics without taking on a large loan."
+              ></textarea>
+
+              <div class="form-row">
+                <label>Topic
+                  <select id="topic" name="topic">
+                    <option value="robotics">AI and robotics</option>
+                    <option value="career">Career transition</option>
+                    <option value="graduate-school">Graduate school</option>
+                    <option value="startup">Starting a company</option>
+                  </select>
+                </label>
+                <label>Current stage
+                  <select id="stage" name="stage">
+                    <option value="student">College student</option>
+                    <option value="early-career">Early career</option>
+                    <option value="career-switcher">Career switcher</option>
+                    <option value="founder">Founder</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="form-actions">
+                <button class="button" type="submit">Show fictional matches</button>
+                <button class="text-button" id="use-example" type="button">Use the example</button>
+              </div>
+            </form>
+
+            <div id="match-results" class="results" aria-live="polite" aria-atomic="true">
+              <p class="empty-state">Your explainable matches will appear here.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-rule" id="roadmap" aria-labelledby="roadmap-title">
+        <div class="shell roadmap-grid">
+          <div>
+            <p class="eyebrow">Current checkpoint</p>
+            <h2 id="roadmap-title">A showcase first. A service only when it is ready.</h2>
+          </div>
+          <div class="roadmap-list">
+            <article><span>Now</span><h3>Safe public showcase</h3><p>Synthetic profiles, local matching, transparent limitations, and public source.</p></article>
+            <article><span>Next</span><h3>Trustworthy private alpha</h3><p>Adult-only testing, minimal data, deletion, moderation, and clear consent.</p></article>
+            <article><span>Later</span><h3>Evidence-led public beta</h3><p>Only after the matching and safety model prove useful with real feedback.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="open-section">
+        <div class="shell open-grid">
+          <div><p class="eyebrow">Open by design</p><h2>Built for scrutiny, adaptation, and community ownership.</h2></div>
+          <div>
+            <p>OpenMargam is an AGPL-licensed project designed to remain understandable and self-hostable.</p>
+            <a class="button button-light" href="https://github.com/K-bhuvan/openmargam">Explore the repository</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell footer-grid">
+        <p>OpenMargam · Experimental open-source project</p>
+        <p>Mentors may offer context. You make the decision.</p>
+      </div>
+    </footer>
+  </body>
+</html>

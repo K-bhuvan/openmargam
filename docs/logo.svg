@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="logo-title logo-description">
+  <title id="logo-title">OpenMargam</title>
+  <desc id="logo-description">Two guides form an open path forward.</desc>
+  <rect width="512" height="512" fill="#141413"/>
+  <circle cx="160" cy="150" r="46" fill="#D97757"/>
+  <circle cx="352" cy="150" r="46" fill="#F4D77A"/>
+  <path fill="#D97757" d="M64 448V310c0-58 47-105 105-105h55v70c0 34-11 66-33 92-31 37-73 64-127 81Z"/>
+  <path fill="#F4D77A" d="M448 448V310c0-58-47-105-105-105h-55v70c0 34 11 66 33 92 31 37 73 64 127 81Z"/>
+</svg>
