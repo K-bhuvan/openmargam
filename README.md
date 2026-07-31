@@ -18,6 +18,8 @@
 </p>
 
 <p align="center">
+  <a href="https://k-bhuvan.github.io/openmargam/"><strong>Try the public showcase</strong></a> ·
+  <a href="https://github.com/K-bhuvan/openmargam/releases/tag/v0.1.0-showcase">v0.1.0 showcase</a> ·
   <a href="#run-locally-with-docker">Run locally</a> ·
   <a href="#project-status">Project status</a> ·
   <a href="#roadmap">Roadmap</a> ·
@@ -25,6 +27,10 @@
 </p>
 
 ---
+
+<p align="center">
+  <img src="docs/openmargam-overview.svg" alt="OpenMargam turns a decision and its constraints into relevant human context, better questions, and a choice that remains yours." width="960" />
+</p>
 
 <details>
 <summary><strong>Why OpenMargam exists</strong> — Read the story behind the project</summary>
@@ -71,6 +77,17 @@ important decisions to connect with people whose experience may help.
 
 The project is intentionally early. We are building in public, learning as we
 go, and will shape the details as the product and community evolve.
+
+## Try the public showcase
+
+The [public showcase](https://k-bhuvan.github.io/openmargam/) demonstrates the
+problem-first matching idea without operating a real mentorship service. It
+uses fictional profiles and performs matching entirely inside the browser.
+
+It has no accounts, bookings, payments, analytics, cookies, storage, external
+APIs, or data submissions. Use it to understand the direction of the project,
+then return to the repository to inspect the source, join a discussion, or
+contribute.
 
 ## Project status
 
@@ -232,6 +249,14 @@ Read [`CONTRIBUTING.md`](CONTRIBUTING.md) and
 [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) before opening a change. Security
 issues should follow [`SECURITY.md`](SECURITY.md), not a public issue.
 
+- Ask questions and discuss direction in
+  [GitHub Discussions](https://github.com/K-bhuvan/openmargam/discussions).
+- Choose scoped work from the
+  [issue tracker](https://github.com/K-bhuvan/openmargam/issues).
+- New contributors can start with the
+  [production-operations guide](https://github.com/K-bhuvan/openmargam/issues/12)
+  or [verified showcase screenshots](https://github.com/K-bhuvan/openmargam/issues/13).
+
 ## License
 
 OpenMargam is licensed under the [GNU AGPL v3.0](LICENSE).
@@ -253,13 +278,12 @@ may change as contributors and early users teach us what matters.
 
 ### Next checkpoint — trustworthy public preview
 
-- [ ] Individual mentor profile pages
-- [ ] Bookable availability and confirmation emails
-- [ ] Basic mentee and mentor dashboards
-- [ ] Reviews, blocking, and an admin moderation queue
-- [ ] Trust signals derived from completed sessions and other real activity
-- [ ] Account deletion, privacy, terms, and community-guideline flows
-- [ ] Production operations guidance for rate limits, backups, and monitoring
+- [ ] [Individual mentor profile pages](https://github.com/K-bhuvan/openmargam/issues/7)
+- [ ] [Bookable availability and confirmation notifications](https://github.com/K-bhuvan/openmargam/issues/8)
+- [ ] [Focused mentee and mentor dashboards](https://github.com/K-bhuvan/openmargam/issues/9)
+- [ ] [Reviews, blocking, moderation, and evidence-based trust](https://github.com/K-bhuvan/openmargam/issues/10)
+- [ ] [Account deletion, privacy, terms, and community-guideline flows](https://github.com/K-bhuvan/openmargam/issues/11)
+- [ ] [Production operations guidance for rate limits, backups, and monitoring](https://github.com/K-bhuvan/openmargam/issues/12)
 
 ### Later — community and optional integrations
 
