@@ -14,7 +14,13 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/K-bhuvan/openmargam/actions/workflows/ci.yml"><img src="https://github.com/K-bhuvan/openmargam/actions/workflows/ci.yml/badge.svg" alt="CI status" /></a>
+</p>
+
+<p align="center">
   <a href="#run-locally-with-docker">Run locally</a> ·
+  <a href="#project-status">Project status</a> ·
+  <a href="#roadmap">Roadmap</a> ·
   <a href="#contributing">Contribute</a>
 </p>
 
@@ -70,6 +76,11 @@ go, and will shape the details as the product and community evolve.
 
 OpenMargam is at an **early public checkpoint**, not a finished product.
 
+The repository is ready for people to inspect, run, question, and contribute
+to. The hosted product is **not production-ready** and should not be trusted
+with sensitive personal information, regulated professional advice, or payment
+custody.
+
 The active application lives in `web/`. The root `index.html`, `styles.css`,
 and `src/app.js` files are the original dependency-free prototype and remain
 for reference and regression coverage.
@@ -94,6 +105,8 @@ for reference and regression coverage.
 - Safety guidance, report submission, and audit logging.
 - PostgreSQL, Prisma migrations, Docker Compose, and curated seed data.
 - GitHub Actions checks for tests, typecheck, lint, dependency audit, and build.
+- A public landing page that explains the project before asking visitors to
+  create an account.
 
 ### Current limitations
 
@@ -102,6 +115,8 @@ for reference and regression coverage.
 - Confirmation emails, reviews, blocking, admin moderation UI, badges,
   communities, and calendar integrations are not implemented.
 - Matching weights are code-defined rather than admin-configurable.
+- Trust, review, response, and verification fields are deliberately zero or
+  empty until the product can derive them from real evidence.
 
 ## A project intended to stay open
 
@@ -220,3 +235,39 @@ issues should follow [`SECURITY.md`](SECURITY.md), not a public issue.
 ## License
 
 OpenMargam is licensed under the [GNU AGPL v3.0](LICENSE).
+
+## Roadmap
+
+The roadmap is intentionally outcome-based rather than date-based. Priorities
+may change as contributors and early users teach us what matters.
+
+### Current checkpoint — working foundation
+
+- [x] Self-hostable Next.js and PostgreSQL application
+- [x] Authentication and role-based authorization
+- [x] Mentor profiles and mentee onboarding preferences
+- [x] Problem-first matching with explainable rankings
+- [x] Two-sided booking workflow with external payment and meeting details
+- [x] Safety guidance, report submission, and audit logging
+- [x] Public project documentation, CI, and release hygiene
+
+### Next checkpoint — trustworthy public preview
+
+- [ ] Individual mentor profile pages
+- [ ] Bookable availability and confirmation emails
+- [ ] Basic mentee and mentor dashboards
+- [ ] Reviews, blocking, and an admin moderation queue
+- [ ] Trust signals derived from completed sessions and other real activity
+- [ ] Account deletion, privacy, terms, and community-guideline flows
+- [ ] Production operations guidance for rate limits, backups, and monitoring
+
+### Later — community and optional integrations
+
+- [ ] Saved mentors, contribution badges, and community spaces
+- [ ] Calendar and meeting-provider integrations
+- [ ] Semantic matching with local or open-source embeddings
+- [ ] Optional provider adapters for email, SMS, and user-supplied AI services
+
+The immediate priority is the **trustworthy public preview**. Calendar sync,
+platform chat, payment processing, and advanced AI matching should not distract
+from completing that core experience.

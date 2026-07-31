@@ -16,8 +16,11 @@ const lora = Lora({
 });
 
 export const metadata: Metadata = {
-  title: "OpenMargam — Advisory Network",
-  description: "Problem-first mentorship matching, user-owned services, no commission.",
+  title: {
+    default: "OpenMargam — Find clarity before a life-shaping decision",
+    template: "%s · OpenMargam",
+  },
+  description: "An open, problem-first mentorship network for connecting important questions with relevant lived experience.",
   applicationName: "OpenMargam",
   manifest: "/site.webmanifest",
   icons: {

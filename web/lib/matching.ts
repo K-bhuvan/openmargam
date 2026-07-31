@@ -141,8 +141,10 @@ function buildReasons(
   if (dimensions.meeting === 1 && problem.meeting !== "No preference") {
     reasons.push(`Offers ${problem.meeting} sessions.`);
   }
-  if (mentor.trustScore >= 88) reasons.push("High trust score with verified public signals.");
-  if (reasons.length < 3) reasons.push("Available for low-friction manual scheduling.");
+  if (dimensions.price === 1 && problem.budget !== "No preference") {
+    reasons.push(`Pricing aligns with your ${problem.budget} preference.`);
+  }
+  if (reasons.length < 3) reasons.push("Profile background reflects aspects of your stated problem.");
   return reasons.slice(0, 5);
 }
 
@@ -156,24 +158,21 @@ export function scoreMentor(problem: Problem, mentor: Mentor): MentorMatch {
     careerStage: mentor.stages.includes(problem.stage) ? 1 : 0.35,
     location: problem.location === "No preference" || mentor.locations.includes(problem.location) ? 1 : 0.25,
     language: problem.language === "No preference" || mentor.languages.includes(problem.language) ? 1 : 0.2,
-    availability: mentor.responseRate / 100,
+    availability: 0,
     meeting: problem.meeting === "No preference" || mentor.meetings.includes(problem.meeting) ? 1 : 0.25,
-    trust: mentor.trustScore / 100,
-    review: mentor.reviewQuality / 100,
+    trust: 0,
+    review: 0,
     price: problem.budget === "No preference" || mentor.pricing === problem.budget ? 1 : budgetNearFit(problem.budget, mentor.pricing),
   };
 
   const score =
-    dimensions.problemExpertise * 25 +
-    dimensions.livedExperience * 15 +
-    dimensions.careerStage * 12 +
+    dimensions.problemExpertise * 32 +
+    dimensions.livedExperience * 20 +
+    dimensions.careerStage * 15 +
     dimensions.location * 10 +
     dimensions.language * 8 +
-    dimensions.availability * 8 +
-    dimensions.meeting * 7 +
-    dimensions.trust * 7 +
-    dimensions.review * 5 +
-    dimensions.price * 3;
+    dimensions.meeting * 8 +
+    dimensions.price * 7;
 
   return {
     mentor,

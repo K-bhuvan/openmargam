@@ -9,7 +9,7 @@ export async function GET() {
 
   const mentors = await prisma.mentor.findMany({
     select: PUBLIC_MENTOR_SELECT,
-    orderBy: [{ trustScore: "desc" }, { createdAt: "asc" }],
+    orderBy: { createdAt: "asc" },
   });
   return NextResponse.json({ mentors });
 }

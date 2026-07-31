@@ -31,6 +31,12 @@
     letter-spacing: -0.01em;
     line-height: 1.15;
   }
+
+  a:focus-visible,
+  button:focus-visible {
+    outline: 3px solid rgba(217, 119, 87, 0.45);
+    outline-offset: 3px;
+  }
 }
 
 @layer components {

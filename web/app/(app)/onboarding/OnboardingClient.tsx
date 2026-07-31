@@ -7,7 +7,6 @@ import { TAXONOMY } from "@/lib/matching";
 const SAFETY_OPTIONS = [
   { value: "public-first", label: "Public place or video first" },
   { value: "remote-only", label: "Remote only" },
-  { value: "verified-only", label: "Verified mentors only" },
 ];
 
 export function OnboardingClient({ initial }: { initial: Record<string, string> }) {
@@ -19,7 +18,9 @@ export function OnboardingClient({ initial }: { initial: Record<string, string> 
   const [language, setLanguage] = useState(initial.language || TAXONOMY.languages[1]);
   const [meeting, setMeeting] = useState(initial.meeting || TAXONOMY.meetings[1]);
   const [budget, setBudget] = useState(initial.budget || TAXONOMY.budgets[4]);
-  const [safety, setSafety] = useState(initial.safety || "public-first");
+  const [safety, setSafety] = useState(
+    SAFETY_OPTIONS.some((option) => option.value === initial.safety) ? initial.safety : "public-first",
+  );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
